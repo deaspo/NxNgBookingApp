@@ -13,7 +13,7 @@
             <a
                     (click)="setActive(navItem)"
                     [ngClass]="{'active': navItem.current, 'hover:bg-gray-700': navItem.current == false,'px-3 py-2 rounded-md text-sm font-medium': navItem.name != ''}"
-                    ariaCurrentWhenActive="true"
+                    ariaCurrentWhenActive="page"
                     id={{navItem.name}}
                     routerLink={{navItem.href}}
                     routerLinkActive="active"

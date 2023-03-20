@@ -1,108 +1,17 @@
-&lt;!&ndash; Home page &ndash;&gt;
-
-<input #selection type="hidden"/>
-
-<div class="card-container">
-    <button
-            (click)="selection.value = 'component'"
-            class="card card-small"
-            tabindex="0"
-    >
-        <svg
-                class="material-icons"
-                height="24"
-                viewBox="0 0 24 24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-        >
-            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-        </svg>
-        <span>New Component</span>
-    </button>
-
-    <button
-            (click)="selection.value = 'material'"
-            class="card card-small"
-            tabindex="0"
-    >
-        <svg
-                class="material-icons"
-                height="24"
-                viewBox="0 0 24 24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-        >
-            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-        </svg>
-        <span>Angular Material</span>
-    </button>
-
-    <button
-            (click)="selection.value = 'pwa'"
-            class="card card-small"
-            tabindex="0"
-    >
-        <svg
-                class="material-icons"
-                height="24"
-                viewBox="0 0 24 24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-        >
-            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-        </svg>
-        <span>Add PWA Support</span>
-    </button>
-
-    <button
-            (click)="selection.value = 'dependency'"
-            class="card card-small"
-            tabindex="0"
-    >
-        <svg
-                class="material-icons"
-                height="24"
-                viewBox="0 0 24 24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-        >
-            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-        </svg>
-        <span>Add Dependency</span>
-    </button>
-
-    <button
-            (click)="selection.value = 'test'"
-            class="card card-small"
-            tabindex="0"
-    >
-        <svg
-                class="material-icons"
-                height="24"
-                viewBox="0 0 24 24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-        >
-            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-        </svg>
-        <span>Run and Watch Tests</span>
-    </button>
-
-    <button
-            (click)="selection.value = 'build'"
-            class="card card-small"
-            tabindex="0"
-    >
-        <svg
-                class="material-icons"
-                height="24"
-                viewBox="0 0 24 24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-        >
-            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-        </svg>
-        <span>Build for Production</span>
-    </button>
+<div class="items-center flex flex-wrap border-4 rounded-lg border-dashed border-gray-200 h-96">
+    <div class="container max-w-8xl relative mx-auto">
+        <div class="items-center flex flex-wrap">
+            <div class="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
+                <div class="text-gray-800">
+                    <p variant="lead">
+                        CRUD app for “booking hours on project”. Go to the <a class="text-sky-600 hover:text-sky-600"
+                                                                              routerLink="/bookings"> Bookings
+                        page </a> to
+                        start adding new bookings or see already saved bookings
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
