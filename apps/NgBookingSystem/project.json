@@ -1,0 +1,89 @@
+{
+  "name": "NgBookingSystem",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "generators": {},
+  "sourceRoot": "apps/NgBookingSystem/src",
+  "prefix": "app",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "options": {
+        "outputPath": "dist/apps/NgBookingSystem",
+        "index": "apps/NgBookingSystem/src/index.html",
+        "main": "apps/NgBookingSystem/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/NgBookingSystem/tsconfig.app.json",
+        "assets": [
+          "apps/NgBookingSystem/src/favicon.ico",
+          "apps/NgBookingSystem/src/assets"
+        ],
+        "styles": ["apps/NgBookingSystem/src/styles.css"],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true,
+          "fileReplacements": [
+            {
+              "replace": "apps/NgBookingSystem/src/environments/environment.ts",
+              "with": "apps/NgBookingSystem/src/environments/environment.development.ts"
+            }
+          ]
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "browserTarget": "NgBookingSystem:build:production"
+        },
+        "development": {
+          "browserTarget": "NgBookingSystem:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "NgBookingSystem:build"
+      }
+    },
+    "test": {
+      "executor": "@angular-devkit/build-angular:karma",
+      "options": {
+        "polyfills": ["zone.js", "zone.js/testing"],
+        "tsConfig": "apps/NgBookingSystem/tsconfig.spec.json",
+        "assets": [
+          "apps/NgBookingSystem/src/favicon.ico",
+          "apps/NgBookingSystem/src/assets"
+        ],
+        "styles": ["apps/NgBookingSystem/src/styles.css"],
+        "scripts": []
+      }
+    }
+  }
+}

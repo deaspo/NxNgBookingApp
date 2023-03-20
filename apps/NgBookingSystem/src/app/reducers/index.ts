@@ -1,9 +1,7 @@
 import { isDevMode } from '@angular/core';
 import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 
-export interface State {
-
-}
+export interface State {}
 
 export const reducers: ActionReducerMap<State> = {};
 

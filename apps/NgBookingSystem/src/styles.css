@@ -1,0 +1,85 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+/* You can add global styles to this file, and also import other style files */
+
+.spacer {
+    flex: 1;
+    }
+
+svg.material-icons {
+    height: 24px;
+    width: auto;
+    }
+
+svg.material-icons:not(:last-child) {
+    margin-right: 8px;
+    }
+
+.card svg.material-icons path {
+    fill: #888;
+    }
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 16px;
+    }
+
+.card {
+    align-items: center;
+    all: unset;
+    background-color: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: row;
+    height: 40px;
+    justify-content: center;
+    line-height: 24px;
+    margin: 0 8px 16px;
+    padding: 16px;
+    transition: all 0.2s ease-in-out;
+    width: 200px;
+    }
+
+.card-container .card:not(:last-child) {
+    margin-right: 0;
+    }
+
+.card.card-small {
+    height: 16px;
+    width: 168px;
+    }
+
+.card.card.highlight-card span {
+    margin-left: 60px;
+    }
+
+a:hover {
+    color: white;
+    }
+
+svg#clouds {
+    bottom: -160px;
+    left: -230px;
+    position: fixed;
+    width: 1920px;
+    z-index: -10;
+    }
+
+/* Responsive Styles */
+@media screen and (max-width: 767px) {
+    .card-container > *:not(.circle-link),
+    .terminal {
+        width: 100%;
+        }
+
+    .card.highlight-card span {
+        margin-left: 72px;
+        }
+    }
+
+@media screen and (max-width: 575px) {
+    }
