@@ -20,43 +20,6 @@ svg.material-icons:not(:last-child) {
     fill: #888;
     }
 
-.card-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 16px;
-    }
-
-.card {
-    align-items: center;
-    all: unset;
-    background-color: #fafafa;
-    border: 1px solid #eee;
-    border-radius: 4px;
-    display: flex;
-    flex-direction: row;
-    height: 40px;
-    justify-content: center;
-    line-height: 24px;
-    margin: 0 8px 16px;
-    padding: 16px;
-    transition: all 0.2s ease-in-out;
-    width: 200px;
-    }
-
-.card-container .card:not(:last-child) {
-    margin-right: 0;
-    }
-
-.card.card-small {
-    height: 16px;
-    width: 168px;
-    }
-
-.card.card.highlight-card span {
-    margin-left: 60px;
-    }
-
 a:hover {
     color: white;
     }
