@@ -1,0 +1,46 @@
+<ul class="list-none w-full overflow-auto h-full p-2 relative m-0 divide-y border-b-2">
+    <li *ngFor="let booking of bookings | async; let i=index" class="flex">
+        <div class="flex w-full flex-row" data-testid="itemRoot">
+            <div class="flex w-full flex-row" data-testid="itemBody">
+                <div class="p-2" data-testid="itemPhoto">
+                    <img alt="item-profile" height="80px" src="./assets/logo.png" width="80px"/>
+                </div>
+                <div class="flex w-full gap-2 flex-row" data-testid="itemMain">
+                    <div class="flex w-full gap-2 flex-col" data-testid="itemContent">
+                        <div data-testid="item-title">
+                            <h4 class="m-0 font-sans text-3xl font-normal">
+                                {{booking.bookingTitle}}
+                            </h4>
+                        </div>
+                        <div class="flex flex-row gap-4" data-testid="itemDateLocation">
+                            <div data-testid="item-date">
+                                <app-booked-date [timeStamp]="booking.bookingDate"></app-booked-date>
+                            </div>
+                            <div data-testid="item-location">
+                                <app-booking-location
+                                        [locationId]="booking.bookingLocationId"></app-booking-location>
+                            </div>
+                            <div data-testid="item-location">
+                                <span> Hours Booked: {{booking.bookedHours}}</span>
+                            </div>
+                        </div>
+                        <div data-testid="item-posted-duration">
+                            <app-time-ago [timeStamp]="booking.postedDate"></app-time-ago>
+                        </div>
+                        <app-reaction-button [booking]="booking"></app-reaction-button>
+                    </div>
+                    <div data-testid="item-price">
+                        <app-booking-price [value]="booking.bookingPrice"></app-booking-price>
+                    </div>
+                </div>
+            </div>
+            <div class="block" data-testid="itemMore">
+                <button aria-label="A vertical three dot icon"
+                        class="inline-flex justify-center items-center"
+                        mat-icon-button>
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+            </div>
+        </div>
+    </li>
+</ul>
