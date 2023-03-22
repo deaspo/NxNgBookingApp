@@ -6,6 +6,7 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { ControlsModule } from "apps/NgBookingSystem/src/controls/controls.module";
 import { BookingsModule } from "apps/NgBookingSystem/src/features/bookings/bookings.module";
+import { LocationsModule } from "apps/NgBookingSystem/src/features/locations/locations.module";
 import { BookingsPageComponent } from "apps/NgBookingSystem/src/pages/bookings-page/bookings-page.component";
 import { FaqPageComponent } from "apps/NgBookingSystem/src/pages/faq-page/faq-page.component";
 import { HomePageComponent } from "apps/NgBookingSystem/src/pages/home-page/home-page.component";
@@ -35,7 +36,8 @@ import { metaReducers, reducers } from './reducers';
                   RouterLink,
                   PagesModule,
                   ControlsModule,
-                  BookingsModule
+                  BookingsModule,
+                  LocationsModule
               ],
               providers: [],
               bootstrap: [AppComponent]

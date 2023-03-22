@@ -5,7 +5,7 @@ import { bookingFeatureKey, BookingState } from "../reducer/booking.reducer";
 
 export const selectBookingState = createFeatureSelector<BookingState>(bookingFeatureKey);
 export const selectAllBookings = createSelector(selectBookingState, (state: BookingState) => state.bookings);
-const selectBookingsById = createSelector(
+const selectBookingsById = (bookingId: string) => createSelector(
     selectAllBookings,
-    (bookings: Booking[], bookingId: string) => bookings.find(booking => booking.id === bookingId)
+    (bookings: Booking[]) => bookings.find(booking => booking.id === bookingId)
 );
