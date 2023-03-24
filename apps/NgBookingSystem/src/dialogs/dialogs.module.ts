@@ -1,19 +1,31 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DialogComponent } from './dialog/dialog.component';
-import { DialogBodyComponent } from './dialog-body/dialog-body.component';
-import { DialogFooterComponent } from './dialog-footer/dialog-footer.component';
-import { DialogHeaderComponent } from './dialog-header/dialog-header.component';
-import { DialogModalComponent } from './dialog-modal/dialog-modal.component';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatNativeDateModule } from "@angular/material/core";
+import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatDialogModule } from "@angular/material/dialog";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { BookingDialogComponent } from './booking-dialog/booking-dialog.component';
 
 @NgModule({
-  declarations: [
-    DialogComponent,
-    DialogBodyComponent,
-    DialogFooterComponent,
-    DialogHeaderComponent,
-    DialogModalComponent,
-  ],
-  imports: [CommonModule],
-})
+              declarations: [
+                  BookingDialogComponent
+              ],
+              imports: [
+                  CommonModule,
+                  ReactiveFormsModule,
+                  MatInputModule,
+                  FormsModule,
+                  MatDatepickerModule,
+                  MatSelectModule,
+                  MatDialogModule,
+                  MatButtonModule,
+                  MatNativeDateModule,
+                  BrowserAnimationsModule
+              ],
+              exports: [BookingDialogComponent]
+          })
 export class DialogsModule {}

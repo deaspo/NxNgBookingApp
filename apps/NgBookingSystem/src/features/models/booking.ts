@@ -7,8 +7,8 @@ export interface Booking {
     id: string;
     bookedHours: number;
     bookingTitle: string;
-    bookingDate: string;
-    bookingPrice: number;
+    bookingDate?: string;
+    bookingPrice?: number;
     bookingLocationId: string;
     postedDate: string;
     reactions: ReactionType

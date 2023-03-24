@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { select, Store } from "@ngrx/store";
+import { DeleteBooking } from "apps/NgBookingSystem/src/features/bookings/store/actions/booking.actions";
+import { selectAllBookings } from "apps/NgBookingSystem/src/features/bookings/store/selectors/bookings.selectors";
 import { Observable } from "rxjs";
 import { Booking } from "../../models/booking";
 import { BookingState } from "../store/reducer/booking.reducer";
-import { selectAllBookings } from "../store/selectors/all-bookings.selectors";
 
 @Component({
                selector: 'app-bookings-view',
@@ -11,9 +12,18 @@ import { selectAllBookings } from "../store/selectors/all-bookings.selectors";
                styleUrls: ['./bookings-view.component.css']
            })
 export class BookingsViewComponent {
-    bookings: Observable<Booking[]>
+    bookings: Observable<Booking[]>;
+    @Output() onEdit = new EventEmitter<string>();
 
     constructor(private store: Store<BookingState>) {
         this.bookings = this.store.pipe(select(selectAllBookings))
+    }
+
+    onEditItem(bookingId: string) {
+        this.onEdit.emit(bookingId);
+    }
+
+    async onDeleteItem(bookingId: string) {
+        await this.store.dispatch(DeleteBooking(bookingId))
     }
 }

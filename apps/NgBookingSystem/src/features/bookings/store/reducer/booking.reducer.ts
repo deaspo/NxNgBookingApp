@@ -69,13 +69,7 @@ export const initialState: BookingState = {
 export const bookingReducer = createReducer(
     initialState,
     on(AddBooking, (state: BookingState, { booking }) => {
-        const postedDate = new Date().toISOString();
-        const reaction = {
-            thumbsDown: 0,
-            thumbsUp: 0
-        }
-        const newBooking = { ...booking, postedDate, reaction }
-        return { ...state, bookings: [...state.bookings, newBooking] }
+        return { ...state, bookings: [...state.bookings, booking] }
     }),
     on(UpdateBooking, (state: BookingState, { updatedBooking }) => {
         const { id } = updatedBooking;

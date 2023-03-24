@@ -1,0 +1,97 @@
+<div class="block p-6 rounded-lg shadow-lg bg-white mx-auto max-w-md">
+    <form (ngSubmit)="onSubmit()" [formGroup]="bookingForm" class="pt-1">
+        <mat-form-field class="w-full mb-6 form-group">
+            <input
+                    class="block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                    formControlName="title"
+                    matInput
+                    placeholder="Booking name"
+                    required
+                    type="text"
+            />
+        </mat-form-field>
+        <div class="grid grid-cols-2 gap-4">
+            <mat-form-field class="mb-6 form-group">
+                <input
+                        class="block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                        formControlName="price"
+                        matInput
+                        placeholder="Price"
+                        type="number"
+                />
+            </mat-form-field>
+            <mat-form-field class="mb-6 form-group">
+                <input
+                        class="block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                        formControlName="hours"
+                        matInput
+                        placeholder="Hours"
+                        type="number"
+                />
+            </mat-form-field>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <mat-form-field appearance="fill" class="mb-6 form-group">
+                <input [matDatepicker]="picker" formControlName="date" matInput>
+                <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle [for]="picker" matIconSuffix></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="mb-6 form-group" formGroupName="location">
+                <mat-label>Location</mat-label>
+                <mat-select [(value)]="selectedLocation" formControlName="locationId">
+                    <mat-option></mat-option>
+                    <mat-option
+                            *ngFor="let location of locationOptions"
+                            [value]="location.value"
+                    >{{ location.viewValue }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <!--<div class="mb-6 flex flex-row pl-4 gap-4 form-group">
+                <mat-label>Date</mat-label>
+                <input
+                        class="w-full h-fit form-control"
+                        formControlName="date"
+                        type="date"
+                />
+            </div>
+            <div class="mb-6 flex gap-4 px-4 form-group" formGroupName="location">
+                <mat-label>Location</mat-label>
+                <select class="h-fit w-full" formControlName="locationId" matNativeControl required>
+                    <option selected value="{{bookingInfo?.bookingLocationId}}"></option>
+                    <option
+                            *ngFor="let location of locationOptions"
+                            [value]="location.value"
+                            ngDefaultControl
+                    >
+                        {{location.viewValue}}
+                    </option>
+                </select>
+                <mat-error *ngIf="bookingForm.hasError('required')">
+                    This field is required
+                </mat-error>
+            </div>-->
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <button
+                    (click)="onCancel()"
+                    class="!bg-red-600 hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                    mat-button
+            >
+                Cancel
+            </button>
+            <button
+                    [disabled]="!bookingForm.valid"
+                    class="!bg-green-600 hover:bg-green-700 hover:shadow-lg focus:bg-green-700 focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                    mat-button
+                    type="submit"
+            >
+                Submit
+            </button>
+        </div>
+    </form>
+    <!--<p>Form Value: {{ bookingForm.value | json }}</p>
+
+    <p>Form Status: {{ bookingForm.status }}</p>-->
+</div>

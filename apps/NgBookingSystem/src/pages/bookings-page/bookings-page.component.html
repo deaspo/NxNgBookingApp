@@ -1,1 +1,12 @@
-<app-bookings-view></app-bookings-view>
+<app-bookings-view (onEdit)="onEditBooking($event)" *ngIf="showBookingsList"></app-bookings-view>
+<div class="flex justify-end flex-1 mx-4">
+    <app-booking-add
+            (showingForm)="onShowForm()"
+            *ngIf="showBookingsList"
+    ></app-booking-add>
+</div>
+<app-booking-dialog
+        (hideForm)="onHideForm()"
+        *ngIf="showBookingForm"
+        [bookingInfo]="bookingInfo"
+></app-booking-dialog>

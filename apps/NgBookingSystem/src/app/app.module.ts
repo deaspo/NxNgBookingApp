@@ -5,6 +5,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { ControlsModule } from "apps/NgBookingSystem/src/controls/controls.module";
+import { DialogsModule } from "apps/NgBookingSystem/src/dialogs/dialogs.module";
 import { BookingsModule } from "apps/NgBookingSystem/src/features/bookings/bookings.module";
 import { LocationsModule } from "apps/NgBookingSystem/src/features/locations/locations.module";
 import { BookingsPageComponent } from "apps/NgBookingSystem/src/pages/bookings-page/bookings-page.component";
@@ -37,7 +38,8 @@ import { metaReducers, reducers } from './reducers';
                   PagesModule,
                   ControlsModule,
                   BookingsModule,
-                  LocationsModule
+                  LocationsModule,
+                  DialogsModule
               ],
               providers: [],
               bootstrap: [AppComponent]
