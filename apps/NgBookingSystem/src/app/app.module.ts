@@ -8,6 +8,7 @@ import { ControlsModule } from "apps/NgBookingSystem/src/controls/controls.modul
 import { DialogsModule } from "apps/NgBookingSystem/src/dialogs/dialogs.module";
 import { BookingsModule } from "apps/NgBookingSystem/src/features/bookings/bookings.module";
 import { LocationsModule } from "apps/NgBookingSystem/src/features/locations/locations.module";
+import { BookingPageComponent } from "apps/NgBookingSystem/src/pages/booking-page/booking-page.component";
 import { BookingsPageComponent } from "apps/NgBookingSystem/src/pages/bookings-page/bookings-page.component";
 import { FaqPageComponent } from "apps/NgBookingSystem/src/pages/faq-page/faq-page.component";
 import { HomePageComponent } from "apps/NgBookingSystem/src/pages/home-page/home-page.component";
@@ -26,6 +27,7 @@ import { metaReducers, reducers } from './reducers';
                   RouterModule.forRoot(
                       [
                           { path: 'home', component: HomePageComponent },
+                          { path: 'booking/:id', component: BookingPageComponent },
                           { path: 'bookings', component: BookingsPageComponent },
                           { path: 'locations', component: LocationsPageComponent },
                           { path: 'faq', component: FaqPageComponent },

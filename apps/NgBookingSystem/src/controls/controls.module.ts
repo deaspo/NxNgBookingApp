@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatIconModule } from "@angular/material/icon";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
@@ -9,7 +10,7 @@ import { HeaderComponent } from './header/header.component';
                   FooterComponent,
                   HeaderComponent
               ],
-              imports: [CommonModule, RouterLinkActive, RouterLink],
+              imports: [CommonModule, RouterLinkActive, RouterLink, MatIconModule],
               exports: [FooterComponent, HeaderComponent]
           })
 export class ControlsModule {}

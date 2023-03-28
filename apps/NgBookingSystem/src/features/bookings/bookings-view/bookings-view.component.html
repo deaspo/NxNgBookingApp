@@ -1,59 +1,34 @@
-<div class="h-[600px]">
-    <ul class="list-none w-full overflow-auto h-full p-2 relative m-0 divide-y border-b-2">
-        <li *ngFor="let booking of bookings | async; let i=index" class="flex">
-            <div class="flex w-full flex-row" data-testid="itemRoot">
-                <div class="flex w-full flex-row" data-testid="itemBody">
-                    <div class="p-2" data-testid="itemPhoto">
-                        <img alt="item-profile" height="80px" src="./assets/logo.png" width="80px"/>
-                    </div>
-                    <div class="flex w-full gap-2 flex-row" data-testid="itemMain">
-                        <div class="flex w-full gap-2 flex-col" data-testid="itemContent">
-                            <div data-testid="item-title">
-                                <h4 class="m-0 font-sans text-3xl font-normal">
-                                    {{booking.bookingTitle}}
-                                </h4>
-                            </div>
-                            <div class="flex flex-row gap-4" data-testid="itemDateLocation">
-                                <div data-testid="item-date">
-                                    <app-booked-date [timeStamp]="booking.bookingDate"></app-booked-date>
-                                </div>
-                                <div data-testid="item-location">
-                                    <app-booking-location
-                                            [locationId]="booking.bookingLocationId"></app-booking-location>
-                                </div>
-                                <div data-testid="item-location">
-                                    <span> Hours Booked: {{booking.bookedHours}}</span>
-                                </div>
-                            </div>
-                            <div data-testid="item-posted-duration">
-                                <app-time-ago [timeStamp]="booking.postedDate"></app-time-ago>
-                            </div>
-                            <app-reaction-button [booking]="booking"></app-reaction-button>
-                        </div>
-                        <div data-testid="item-price">
-                            <app-booking-price [value]="booking.bookingPrice"></app-booking-price>
-                        </div>
-                    </div>
+<mat-action-list class="w-full overflow-auto h-full relative border-b-2">
+    <mat-list-item *ngFor="let booking of bookings | async; let i=index"
+                   [routerLink]="['/booking/'+ booking.id]"
+                   class="border-t-2">
+        <div class="flex w-full flex-col gap-2" data-testid="itemContent">
+            <div class="flex items-center gap-2" data-testid="item-title">
+                <div class="flex grow">
+                    <span class="m-0 font-sans text-xl md:text-2xl font-normal" matListItemTitle>
+                        {{booking.bookingTitle}}
+                    </span>
                 </div>
-                <div class="block" data-testid="itemMore">
-                    <button [matMenuTriggerFor]="bookingMenu"
-                            aria-label="A vertical three dot icon"
-                            class="inline-flex justify-center items-center"
-                            mat-icon-button
-                    >
-                        <mat-icon>more_vert</mat-icon>
-                    </button>
-                    <mat-menu #bookingMenu="matMenu" xPosition="after">
-                        <button (click)="onEditItem(booking.id)" mat-menu-item>
-                            <mat-icon>edit</mat-icon>
-                            <span>Edit</span></button>
-                        <button (click)="onDeleteItem(booking.id)" mat-menu-item>
-                            <mat-icon>remove_circle</mat-icon>
-                            <span>Delete</span>
-                        </button>
-                    </mat-menu>
+                <div class="flex" data-testid="item-price">
+                    <app-booking-price [value]="booking.bookingPrice"></app-booking-price>
                 </div>
             </div>
-        </li>
-    </ul>
-</div>
+            <div class="!flex flex-col md:flex-row" data-testid="itemDateLocation" matListItemLine>
+                <div data-testid="item-date">
+                    <app-booked-date [timeStamp]="booking.bookingDate"></app-booked-date>
+                </div>
+                <div class="md:ml-2" data-testid="item-location">
+                    <app-booking-location
+                            [locationId]="booking.bookingLocationId"></app-booking-location>
+                </div>
+                <div class="md:ml-2" data-testid="item-location">
+                    <span> Hours: {{booking.bookedHours}}</span>
+                </div>
+            </div>
+            <div class="text-sm text-gray-800" data-testid="item-posted-duration" matListItemLine>
+                <app-time-ago [timeStamp]="booking.postedDate"></app-time-ago>
+            </div>
+            <app-reaction-button [booking]="booking"></app-reaction-button>
+        </div>
+    </mat-list-item>
+</mat-action-list>

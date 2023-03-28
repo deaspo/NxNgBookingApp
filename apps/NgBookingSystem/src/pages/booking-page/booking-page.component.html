@@ -1,1 +1,66 @@
-<p>booking-page works!</p>
+<div *ngIf="showNotFoundMessage; else showPage"><span>No info for booking was found!</span></div>
+
+<ng-template #showPage>
+    <div *ngIf="bookingInfo && showBookingInfo" class="flex my-4">
+        <div class="flex w-full flex-col gap-2" data-testid="itemContent">
+            <div class="flex items-center gap-2" data-testid="item-title">
+                <div class="flex grow">
+                    <span class="m-0 font-sans text-xl md:text-2xl font-normal">
+                        {{bookingInfo.bookingTitle}}
+                    </span>
+                </div>
+                <div class="flex" data-testid="item-price">
+                    <app-booking-price [value]="bookingInfo.bookingPrice"></app-booking-price>
+                </div>
+            </div>
+            <div class="!flex flex-col md:flex-row" data-testid="itemDateLocation">
+                <div data-testid="item-date">
+                    <app-booked-date [timeStamp]="bookingInfo.bookingDate"></app-booked-date>
+                </div>
+                <div class="md:ml-2" data-testid="item-location">
+                    <app-booking-location
+                            [locationId]="bookingInfo.bookingLocationId"></app-booking-location>
+                </div>
+                <div class="md:ml-2" data-testid="item-location">
+                    <span> Hours: {{bookingInfo.bookedHours}}</span>
+                </div>
+            </div>
+            <div class="text-sm text-gray-800" data-testid="item-posted-duration">
+                <app-time-ago [timeStamp]="bookingInfo.postedDate"></app-time-ago>
+            </div>
+            <app-reaction-button [booking]="bookingInfo"></app-reaction-button>
+        </div>
+        <div class="flex items-center" data-testid="itemMore">
+            <button
+                    [matMenuTriggerFor]="bookingMenu"
+                    aria-label="A vertical three dot icon"
+                    class="inline-flex"
+                    mat-icon-button
+                    matTooltip="More actions"
+            >
+                <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #bookingMenu="matMenu" xPosition="after">
+                <button (click)="onEditBooking()" [disableRipple] mat-menu-item
+                        matTooltip="Edit booking">
+                    <mat-icon>edit</mat-icon>
+                    <span>Edit</span>
+                </button>
+                <button (click)="onDeleteItem()" [disableRipple] mat-menu-item
+                        matTooltip="Remove booking">
+                    <mat-icon>delete</mat-icon>
+                    <span>Delete</span>
+                </button>
+            </mat-menu>
+        </div>
+    </div>
+    <app-booking-dialog
+            (hideForm)="onHideForm()"
+            *ngIf="showBookingForm"
+            [bookingInfo]="bookingInfo"
+    ></app-booking-dialog>
+</ng-template>
+<div>
+    <a *ngIf="showBookingInfo || showNotFoundMessage" [routerLink]="['/bookings']"
+       class="text-blue-400 hover:text-blue-600">Go Back</a>
+</div>

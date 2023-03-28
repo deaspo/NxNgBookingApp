@@ -8,29 +8,16 @@
     flex: 1;
     }
 
-svg.material-icons {
-    height: 24px;
-    width: auto;
-    }
-
-svg.material-icons:not(:last-child) {
-    margin-right: 8px;
-    }
-
-.card svg.material-icons path {
-    fill: #888;
-    }
-
-a:hover {
-    color: white;
-    }
-
 svg#clouds {
     bottom: -160px;
     left: -230px;
     position: fixed;
     width: 1920px;
     z-index: -10;
+    }
+
+.active-page {
+    background-color: rgba(95, 95, 91);
     }
 
 /* Responsive Styles */

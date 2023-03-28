@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Navigation, NavItem } from './header-items';
+import { Navigation } from './header-items';
 
 @Component({
                selector: 'app-header',
@@ -7,11 +7,5 @@ import { Navigation, NavItem } from './header-items';
                styleUrls: ['./header.component.css']
            })
 export class HeaderComponent {
-    activeNav = 'Dashboard';
     navigation = Navigation;
-
-    public setActive(item: NavItem): void {
-        this.activeNav = item.name;
-        item.current = !item.current;
-    }
 }
