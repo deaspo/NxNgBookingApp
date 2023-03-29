@@ -41,12 +41,12 @@
                 <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #bookingMenu="matMenu" xPosition="after">
-                <button (click)="onEditBooking()" [disableRipple] mat-menu-item
+                <button (click)="onClickEditBooking()" [disableRipple] mat-menu-item
                         matTooltip="Edit booking">
                     <mat-icon>edit</mat-icon>
                     <span>Edit</span>
                 </button>
-                <button (click)="onDeleteItem()" [disableRipple] mat-menu-item
+                <button (click)="onClickDeleteItem()" [disableRipple] mat-menu-item
                         matTooltip="Remove booking">
                     <mat-icon>delete</mat-icon>
                     <span>Delete</span>
@@ -56,6 +56,7 @@
     </div>
     <app-booking-dialog
             (hideForm)="onHideForm()"
+            (submitForm)="onEditBooking($event)"
             *ngIf="showBookingForm"
             [bookingInfo]="bookingInfo"
     ></app-booking-dialog>

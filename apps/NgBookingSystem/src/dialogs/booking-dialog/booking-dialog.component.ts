@@ -1,17 +1,60 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import {
+    AbstractControl,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    ValidationErrors,
+    ValidatorFn,
+    Validators
+} from "@angular/forms";
 import { select, Store } from "@ngrx/store";
-import { AddBooking } from "apps/NgBookingSystem/src/features/bookings/store/actions/booking.actions";
 import { BookingState } from "apps/NgBookingSystem/src/features/bookings/store/reducer/booking.reducer";
 import { Booking } from "apps/NgBookingSystem/src/features/models/booking";
 import { parseISO } from "date-fns";
-import { nanoid } from "nanoid";
+import { Schema, z, ZodError } from 'zod';
 import { LocationState } from "../../features/locations/store/reducer/location.reducer";
 import { selectAllLocations } from "../../features/locations/store/selectors/all-locations.selectors";
 
 interface LocOptions {
     value: string;
     viewValue: string;
+}
+
+interface ParseResult {
+    data: object | string | number | null;
+    error: ZodError | null;
+    success: boolean;
+}
+
+function safeParse(schema: Schema, inputData: object | string | number): ParseResult {
+    let data = null, error: ZodError | null = null, success = false;
+
+    try {
+        data = schema.parse(inputData);
+        success = schema.safeParse(inputData).success
+    }
+    catch (e: any) {
+        error = e;
+    }
+
+    return { data, error, success };
+}
+
+export function allowedPriceRange(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+        // implement zod validation
+        // Price within range 0 - 100 only
+        const priceParser = z.number(
+            {
+                required_error: 'Price is required',
+                invalid_type_error: 'Price must be a number'
+
+            }).nonnegative().lt(101).safe().finite();
+        const { success, error } = safeParse(priceParser, control.value);
+        return success ? null : { ...error };
+
+    }
 }
 
 @Component({
@@ -22,6 +65,7 @@ interface LocOptions {
 export class BookingDialogComponent {
     locationOptions: LocOptions[] = [];
     @Output() hideForm = new EventEmitter();
+    @Output() submitForm = new EventEmitter<Pick<Booking, "bookingLocationId" | "bookedHours" | "bookingTitle" | "bookingPrice" | "bookingDate">>()
     bookingForm: FormGroup = new FormGroup<any>({});
     selectedLocation: string | undefined;
 
@@ -49,7 +93,10 @@ export class BookingDialogComponent {
                 title: [this.bookingInfo?.bookingTitle, Validators.required],
                 hours: [this.bookingInfo?.bookedHours, Validators.required],
                 date: [this.bookingInfo?.bookingDate],
-                price: [this.bookingInfo?.bookingPrice],
+                price: new FormControl(
+                    this.bookingInfo?.bookingPrice ? this.bookingInfo?.bookingPrice : 0,
+                    [allowedPriceRange()]
+                ),
                 location: this.fb.group(
                     {
                         locationId: [this.bookingInfo?.bookingLocationId, Validators.required]
@@ -77,41 +124,35 @@ export class BookingDialogComponent {
     }
 
     async onSubmit() {
-        const title = this.bookingForm.value.title;
-        let date = this.bookingForm.value.date;
-        const hours = this.bookingForm.value.hours;
-        const price = this.bookingForm.value.price;
-        const locId = this.bookingForm.value.location?.locationId;
-
-        const canSave = [title, hours, date, locId].every(Boolean);
-
-        date = new Date(date).toISOString();
-
-        if (canSave) {
-            try {
-                this.storeBooking.dispatch(AddBooking(
-                    {
-                        bookedHours: hours ? hours : 0,
-                        bookingDate: date!,
-                        bookingLocationId: locId!,
-                        bookingPrice: price ? price : 0,
-                        bookingTitle: title!,
-                        id: nanoid(),
-                        postedDate: new Date().toISOString(),
-                        reactions: {
-                            thumbsDown: 0,
-                            thumbsUp: 0
-                        }
-                    }));
-                this.hideForm.emit();
-            }
-            catch (e) {
-                console.warn('Failed to save booking with err', e)
-            }
+        const submitData: Pick<Booking, "bookingLocationId" | "bookedHours" | "bookingTitle" | "bookingPrice" | "bookingDate"> = {
+            bookingTitle: this.bookingForm.value.title,
+            bookingDate: new Date(this.bookingForm.value.date).toISOString(),
+            bookedHours: this.bookingForm.value.hours,
+            bookingPrice: this.bookingForm.value.price,
+            bookingLocationId: this.bookingForm.value.location?.locationId
         }
+        this.submitForm.emit(submitData);
     }
 
     ngOnChanges(changes: SimpleChanges) {
         this.bookingInfo = changes['bookingInfo'].currentValue;
+    }
+
+    getPriceErrorMessage() {
+        let errorMessages: string | undefined;
+        const error = this.bookingForm.get('price')?.errors;
+        if (this.bookingForm && error) {
+            const error_code = error['issues'][0].code;
+            if (error_code === 'too_small') {
+                errorMessages = 'Must be greater than 0';
+            }
+            else if (error_code === 'too_big') {
+                errorMessages = 'Cannot be larger than 100';
+            }
+            else if (error_code === 'invalid_type') {
+                errorMessages = 'Price is required';
+            }
+        }
+        return errorMessages;
     }
 }

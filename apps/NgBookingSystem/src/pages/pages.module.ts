@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { RouterLink } from "@angular/router";
+import { ComponentsModule } from "apps/NgBookingSystem/src/components/components.module";
 import { DialogsModule } from "apps/NgBookingSystem/src/dialogs/dialogs.module";
 import { BookingsModule } from "apps/NgBookingSystem/src/features/bookings/bookings.module";
 import { BookingPageComponent } from './booking-page/booking-page.component';
@@ -17,7 +22,7 @@ import { LocationsPageComponent } from './locations-page/locations-page.componen
                   HomePageComponent,
                   LocationsPageComponent
               ],
-              imports: [CommonModule, RouterLink, BookingsModule, DialogsModule],
+              imports: [CommonModule, RouterLink, BookingsModule, DialogsModule, ComponentsModule, MatMenuModule, MatIconModule, MatTooltipModule, MatButtonModule],
               exports: [
                   BookingPageComponent,
                   BookingsPageComponent,

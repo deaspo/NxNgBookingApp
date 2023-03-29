@@ -1,31 +1,34 @@
 <div class="block p-6 rounded-lg shadow-lg bg-white mx-auto max-w-md">
     <form (ngSubmit)="onSubmit()" [formGroup]="bookingForm" class="pt-1">
         <mat-form-field class="w-full mb-6 form-group">
+            <mat-label>Booking name</mat-label>
             <input
                     class="block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     formControlName="title"
                     matInput
-                    placeholder="Booking name"
                     required
                     type="text"
             />
         </mat-form-field>
         <div class="grid grid-cols-2 gap-4">
             <mat-form-field class="mb-6 form-group">
+                <mat-label>Price</mat-label>
                 <input
                         class="block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                         formControlName="price"
                         matInput
-                        placeholder="Price"
                         type="number"
                 />
+                <mat-error *ngIf="bookingForm.get('price')?.invalid">
+                    {{getPriceErrorMessage()}}
+                </mat-error>
             </mat-form-field>
             <mat-form-field class="mb-6 form-group">
+                <mat-label>Hours</mat-label>
                 <input
                         class="block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                         formControlName="hours"
                         matInput
-                        placeholder="Hours"
                         type="number"
                 />
             </mat-form-field>
@@ -48,30 +51,6 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-            <!--<div class="mb-6 flex flex-row pl-4 gap-4 form-group">
-                <mat-label>Date</mat-label>
-                <input
-                        class="w-full h-fit form-control"
-                        formControlName="date"
-                        type="date"
-                />
-            </div>
-            <div class="mb-6 flex gap-4 px-4 form-group" formGroupName="location">
-                <mat-label>Location</mat-label>
-                <select class="h-fit w-full" formControlName="locationId" matNativeControl required>
-                    <option selected value="{{bookingInfo?.bookingLocationId}}"></option>
-                    <option
-                            *ngFor="let location of locationOptions"
-                            [value]="location.value"
-                            ngDefaultControl
-                    >
-                        {{location.viewValue}}
-                    </option>
-                </select>
-                <mat-error *ngIf="bookingForm.hasError('required')">
-                    This field is required
-                </mat-error>
-            </div>-->
         </div>
         <div class="grid grid-cols-2 gap-4">
             <button

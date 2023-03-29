@@ -125,7 +125,6 @@ export const bookingReducer = createReducer(
     }),
     on(UpdateBooking, (state: BookingState, { updatedBooking }) => {
         const { id } = updatedBooking;
-        updatedBooking.postedDate = new Date().toISOString();
         const bookings = state.bookings.filter(booking => booking.id !== id);
         return {
             ...state, bookings: [...bookings, updatedBooking]

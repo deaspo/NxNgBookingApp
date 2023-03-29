@@ -18,7 +18,10 @@
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
-    "lib": ["ES2022", "dom"],
+    "lib": [
+      "ES2022",
+      "dom"
+    ],
     "paths": {},
     "rootDir": "."
   },
@@ -28,6 +31,11 @@
     "strictInputAccessModifiers": true,
     "strictTemplates": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "tmp"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

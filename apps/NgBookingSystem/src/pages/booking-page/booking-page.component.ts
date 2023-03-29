@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { Store } from "@ngrx/store";
-import { DeleteBooking } from "apps/NgBookingSystem/src/features/bookings/store/actions/booking.actions";
+import { DeleteBooking, UpdateBooking } from "apps/NgBookingSystem/src/features/bookings/store/actions/booking.actions";
 import { selectBookingById } from "apps/NgBookingSystem/src/features/bookings/store/selectors/bookings.selectors";
 import { Booking } from "apps/NgBookingSystem/src/features/models/booking";
 
@@ -47,7 +47,7 @@ export class BookingPageComponent {
         })
     }
 
-    async onDeleteItem() {
+    async onClickDeleteItem() {
         this.store.dispatch(DeleteBooking(this.bookingId));
         await this.router.navigateByUrl('/bookings')
     }
@@ -62,7 +62,27 @@ export class BookingPageComponent {
         this.showBookingForm = false;
     }
 
-    onEditBooking() {
+    onClickEditBooking() {
         this.onShowForm();
+    }
+
+    onEditBooking(editedBooking: Pick<Booking, "bookingLocationId" | "bookedHours" | "bookingTitle" | "bookingPrice" | "bookingDate">) {
+        const { bookingDate } = editedBooking;
+        console.log('date', bookingDate)
+        if (this.bookingInfo) {
+            try {
+                this.store.dispatch(UpdateBooking(
+                    {
+                        id: this.bookingInfo.id,
+                        postedDate: new Date().toISOString(),
+                        reactions: this.bookingInfo.reactions,
+                        ...editedBooking
+                    }));
+                this.onHideForm();
+            }
+            catch (e) {
+                console.warn('Failed to save booking with err', e)
+            }
+        }
     }
 }
