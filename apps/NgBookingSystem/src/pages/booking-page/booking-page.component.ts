@@ -67,8 +67,6 @@ export class BookingPageComponent {
     }
 
     onEditBooking(editedBooking: Pick<Booking, "bookingLocationId" | "bookedHours" | "bookingTitle" | "bookingPrice" | "bookingDate">) {
-        const { bookingDate } = editedBooking;
-        console.log('date', bookingDate)
         if (this.bookingInfo) {
             try {
                 this.store.dispatch(UpdateBooking(
