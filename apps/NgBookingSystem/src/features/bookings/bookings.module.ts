@@ -10,13 +10,15 @@ import { ComponentsModule } from "apps/NgBookingSystem/src/components/components
 import { BookingAddComponent } from './booking-add/booking-add.component';
 import { BookingsViewComponent } from './bookings-view/bookings-view.component';
 import { bookingFeatureKey, bookingReducer } from "./store/reducer/booking.reducer";
+import { EffectsModule } from '@ngrx/effects';
+import { BookingEffectsEffects } from './store/effects/booking-effects.effects';
 
 @NgModule({
               declarations: [
                   BookingsViewComponent,
                   BookingAddComponent
               ],
-              imports: [CommonModule, StoreModule.forFeature(bookingFeatureKey, bookingReducer), ComponentsModule, MatIconModule, MatButtonModule, MatTooltipModule, MatListModule, RouterLink],
+              imports: [CommonModule, StoreModule.forFeature(bookingFeatureKey, bookingReducer), ComponentsModule, MatIconModule, MatButtonModule, MatTooltipModule, MatListModule, RouterLink, EffectsModule.forFeature([BookingEffectsEffects])],
               exports: [
                   BookingsViewComponent,
                   BookingAddComponent

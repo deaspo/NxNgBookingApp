@@ -1,5 +1,5 @@
 <ng-container *ngFor="let item of reactionButtons | keyvalue">
-    <button id="{{item.key}}" type="button">
+    <button (click)="onClickReaction($event,item.key)" id="{{item.key}}" mat-button>
         {{item.key}} {{item.value}}
     </button>
 </ng-container>
