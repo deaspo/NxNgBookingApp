@@ -1,7 +1,13 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { Booking } from "apps/NgBookingSystem/src/features/models/booking";
 
-import { bookingFeatureKey, BookingState } from "../reducer/booking.reducer";
+import {
+    BookingAdapterState,
+    bookingFeatureKey,
+    selectAdapterAllBookings,
+    selectAdapterBookingEntities,
+    selectAdapterBookingIds
+} from "../reducer/booking.reducer";
 
 export const selectBookingState = createFeatureSelector<BookingState>(bookingFeatureKey);
 export const selectAllBookings = createSelector(selectBookingState, (state: BookingState) => state.bookings.slice().sort((a, b) => b.postedDate.localeCompare(a.postedDate)));

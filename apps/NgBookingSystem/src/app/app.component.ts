@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from "@ngrx/store";
 import { BookingState } from "apps/NgBookingSystem/src/features/bookings/store/reducer/booking.reducer";
+import { initialAdapterState } from "apps/NgBookingSystem/src/features/data/initial-data";
 
 @Component({
                selector: 'app-root',
@@ -13,6 +14,6 @@ export class AppComponent {
     constructor(private storeBooking: Store<BookingState>) {}
 
     ngOnInit() {
-        this.storeBooking.dispatch({ type: '[Booking] Load Bookings' })
+        this.storeBooking.dispatch({ type: '[Booking] Load Bookings Success', data: initialAdapterState })
     }
 }

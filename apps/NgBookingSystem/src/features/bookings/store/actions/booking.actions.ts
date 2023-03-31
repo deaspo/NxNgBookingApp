@@ -1,16 +1,16 @@
 import { createAction, props } from '@ngrx/store';
 import { Booking, ReactionType } from "../../../models/booking";
 
-export const loadAddBookings = createAction(
+export const LoadAddBookings = createAction(
     '[Booking] Load Bookings'
 );
 
-export const loadAddBookingsSuccess = createAction(
+export const LoadAddBookingsSuccess = createAction(
     '[Booking] Load Bookings Success',
     props<{ data: Booking[] }>()
 );
 
-export const loadAddBookingsFailure = createAction(
+export const LoadAddBookingsFailure = createAction(
     '[Booking] Load Bookings Failure',
     props<{ error: any }>()
 );

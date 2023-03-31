@@ -1,7 +1,15 @@
+import { createEntityAdapter, EntityAdapter, EntityState, Update } from "@ngrx/entity";
 import { createReducer, on } from '@ngrx/store';
-import { sub } from 'date-fns';
+import { initialState } from "apps/NgBookingSystem/src/features/data/initial-data";
+
 import { Booking } from "../../../models/booking";
-import { AddBooking, DeleteBooking, ReactionAdded, UpdateBooking } from "../actions/booking.actions";
+import {
+    AddBooking,
+    DeleteBooking,
+    LoadAddBookingsSuccess,
+    ReactionAdded,
+    UpdateBooking
+} from "../actions/booking.actions";
 
 export const bookingFeatureKey = 'booking';
 
@@ -9,114 +17,57 @@ export interface BookingState {
     bookings: Booking[];
 }
 
-export const initialState: BookingState = {
-    bookings: [
-        {
-            id: '0',
-            bookedHours: 7,
-            bookingTitle: 'Hotel Bratislava',
-            bookingDate: sub(new Date(), { days: 10 }).toISOString(),
-            bookingPrice: 50,
-            bookingLocationId: "0",
-            postedDate: sub(new Date(), { minutes: 50 }).toISOString(),
-            reactions: {
-                thumbsUp: 3,
-                thumbsDown: 1
-            }
-        },
-        {
-            id: '1',
-            bookedHours: 1,
-            bookingTitle: 'Hotel Austria',
-            bookingDate: sub(new Date(), { days: 20 }).toISOString(),
-            bookingPrice: 100,
-            bookingLocationId: "1",
-            postedDate: sub(new Date(), { minutes: 40 }).toISOString(),
-            reactions: {
-                thumbsUp: 5,
-                thumbsDown: 0
-            }
-        },
-        {
-            id: '2',
-            bookedHours: 3,
-            bookingTitle: 'Hotel Prague',
-            bookingDate: sub(new Date(), { days: 1 }).toISOString(),
-            bookingPrice: 50,
-            bookingLocationId: "2",
-            postedDate: sub(new Date(), { minutes: 30 }).toISOString(),
-            reactions: {
-                thumbsUp: 0,
-                thumbsDown: 2
-            }
-        },
-        {
-            id: '3',
-            bookedHours: 5,
-            bookingTitle: 'Hotel Hungary',
-            bookingDate: sub(new Date(), { days: 1 }).toISOString(),
-            bookingPrice: 5,
-            bookingLocationId: "",
-            postedDate: sub(new Date(), { minutes: 25 }).toISOString(),
-            reactions: {
-                thumbsUp: 4,
-                thumbsDown: 3
-            }
-        },
-        {
-            id: '4',
-            bookedHours: 7,
-            bookingTitle: 'Hotel Danube',
-            bookingDate: sub(new Date(), { days: 10 }).toISOString(),
-            bookingPrice: 500,
-            bookingLocationId: "0",
-            postedDate: sub(new Date(), { minutes: 20 }).toISOString(),
-            reactions: {
-                thumbsUp: 10,
-                thumbsDown: 1
-            }
-        },
-        {
-            id: '5',
-            bookedHours: 1,
-            bookingTitle: 'Hotel Vienna',
-            bookingDate: sub(new Date(), { days: 20 }).toISOString(),
-            bookingPrice: 600,
-            bookingLocationId: "1",
-            postedDate: sub(new Date(), { minutes: 10 }).toISOString(),
-            reactions: {
-                thumbsUp: 50,
-                thumbsDown: 10
-            }
-        },
-        {
-            id: '6',
-            bookedHours: 3,
-            bookingTitle: 'Hotel Czech',
-            bookingDate: sub(new Date(), { days: 1 }).toISOString(),
-            bookingPrice: 250,
-            bookingLocationId: "2",
-            postedDate: sub(new Date(), { minutes: 5 }).toISOString(),
-            reactions: {
-                thumbsUp: 30,
-                thumbsDown: 12
-            }
-        },
-        {
-            id: '7',
-            bookedHours: 5,
-            bookingTitle: 'Hotel Cunovo',
-            bookingDate: sub(new Date(), { days: 1 }).toISOString(),
-            bookingPrice: 150,
-            bookingLocationId: "",
-            postedDate: sub(new Date(), { minutes: 1 }).toISOString(),
-            reactions: {
-                thumbsUp: 14,
-                thumbsDown: 5
-            }
+export interface BookingAdapterState extends EntityState<Booking> {
+}
+
+export function selectBookingId(b: Booking) {
+    return b.id;
+}
+
+export function sortByPostedDate(a: Booking, b: Booking) {
+    return b.postedDate.localeCompare(a.postedDate);
+}
+
+export const bookingAdapter: EntityAdapter<Booking> = createEntityAdapter<Booking>(
+    {
+        selectId: selectBookingId,
+        sortComparer: sortByPostedDate
+    });
+export const initialStateAdapter: BookingAdapterState = bookingAdapter.getInitialState(
+    {})
+
+export const bookingAdapterReducer = createReducer(
+    initialStateAdapter,
+    on(AddBooking, (state: EntityState<Booking>, { booking }) => {
+        return bookingAdapter.addOne(booking, state)
+    }),
+    on(UpdateBooking, (state: EntityState<Booking>, { updatedBooking }) => {
+        const nBooking: Update<Booking> = { id: updatedBooking.id, changes: updatedBooking }
+        return bookingAdapter.updateOne(nBooking, state);
+    }),
+    on(DeleteBooking, (state: EntityState<Booking>, { bookingId }) => {
+        return bookingAdapter.removeOne(bookingId, state);
+    }),
+    on(ReactionAdded, (state: EntityState<Booking>, { bookingId, reaction }) => {
+        const existingBooking = state.entities[bookingId];
+        if (existingBooking) {
+            const nBooking: Update<Booking> = { id: bookingId, changes: { ...existingBooking, reactions: reaction } };
+            return bookingAdapter.updateOne(nBooking, state);
         }
-    ]
-};
+        return state;
+    }),
+    on(LoadAddBookingsSuccess, (state: EntityState<Booking>, { data }) => {
+        return bookingAdapter.addMany(data, state);
+    })
+);
+
+// Selectors
+export const {
+    selectEntities: selectAdapterBookingEntities,
+    selectTotal: selectAdapterBookingTotal,
+    selectAll: selectAdapterAllBookings,
+    selectIds: selectAdapterBookingIds
+} = bookingAdapter.getSelectors();
 
 export const bookingReducer = createReducer(
     initialState,
