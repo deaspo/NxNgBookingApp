@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Store } from "@ngrx/store";
-import { ThumbsDown } from "apps/NgBookingSystem/src/features/bookings/store/actions/booking.actions";
+import { ReactionAdded } from "apps/NgBookingSystem/src/features/bookings/store/actions/booking.actions";
 import { BookingState } from "apps/NgBookingSystem/src/features/bookings/store/reducer/booking.reducer";
 import { Booking, ReactionType } from "apps/NgBookingSystem/src/features/models/booking";
 
@@ -36,14 +36,13 @@ export class ReactionButtonComponent {
 
         const key = Object.keys(reactionEmoji).find(k => reactionEmoji[k] === value as string);
         if (key) {
-            if (key === 'thumbsDown') {
-                this.store.dispatch(ThumbsDown({ bookingId: this.booking.id }))
-            }
+            /*if (key === 'thumbsDown') {
+             this.store.dispatch(ThumbsDown({ bookingId: this.booking.id }))
+             }*/
 
-            /*
-             const newValue = this.booking.reactions[key as keyof ReactionType] + 1;
-             const updatedReaction: ReactionType = { ...this.booking.reactions, [key]: newValue };
-             this.store.dispatch(ReactionAdded(this.booking.id, updatedReaction));*/
+            const newValue = this.booking.reactions[key as keyof ReactionType] + 1;
+            const updatedReaction: ReactionType = { ...this.booking.reactions, [key]: newValue };
+            this.store.dispatch(ReactionAdded(this.booking.id, updatedReaction));
         }
     }
 
