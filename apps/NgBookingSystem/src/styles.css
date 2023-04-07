@@ -2,7 +2,11 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 /* You can add global styles to this file, and also import other style files */
+/* Angular Material */
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+
+/* Ng-select */
+@import "~@ng-select/ng-select/themes/default.theme.css";
 
 .spacer {
     flex: 1;
@@ -30,6 +34,10 @@ svg#clouds {
     .card.highlight-card span {
         margin-left: 72px;
         }
+    }
+
+.primary-button {
+    background-color: #0288d1 !important;
     }
 
 @media screen and (max-width: 575px) {

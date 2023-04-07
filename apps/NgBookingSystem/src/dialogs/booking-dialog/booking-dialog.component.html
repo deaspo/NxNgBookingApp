@@ -1,5 +1,10 @@
 <div class="block p-6 rounded-lg shadow-lg bg-white mx-auto max-w-md">
-    <form (ngSubmit)="onSubmit()" [formGroup]="bookingForm" class="pt-1">
+    <div class="flex flex-shrink-0 items-center justify-between border-b border-gray-200 rounded-t-md">
+        <h5 class="text-xl font-medium leading-normal text-gray-800">
+            Booking form
+        </h5>
+    </div>
+    <form (ngSubmit)="onSubmitBookingForm()" [formGroup]="bookingForm" class="pt-1">
         <mat-form-field class="w-full mb-6 form-group">
             <mat-label>Booking name</mat-label>
             <input
@@ -40,17 +45,12 @@
                 <mat-datepicker-toggle [for]="picker" matIconSuffix></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
-            <mat-form-field appearance="fill" class="mb-6 form-group" formGroupName="location">
-                <mat-label>Location</mat-label>
-                <mat-select [(value)]="selectedLocation" formControlName="locationId">
-                    <mat-option></mat-option>
-                    <mat-option
-                            *ngFor="let location of locationOptions"
-                            [value]="location.value"
-                    >{{ location.viewValue }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+            <div class="mb-6 form-group">
+                <app-location-add-button
+                        (submitData)="updateLocationInfo($event)"
+                        [buttonText]="selectedLocationText"
+                ></app-location-add-button>
+            </div>
         </div>
         <div class="grid grid-cols-2 gap-4">
             <button
@@ -70,7 +70,7 @@
             </button>
         </div>
     </form>
-    <!--<p>Form Value: {{ bookingForm.value | json }}</p>
+    <p>Form Value: {{ bookingForm.value | json }}</p>
 
-    <p>Form Status: {{ bookingForm.status }}</p>-->
+    <p>Form Status: {{ bookingForm.status }}</p>
 </div>

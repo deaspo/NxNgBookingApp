@@ -1,9 +1,17 @@
 import { Location } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { Store } from "@ngrx/store";
-import { DeleteBooking, UpdateBooking } from "apps/NgBookingSystem/src/features/bookings/store/actions/booking.actions";
-import { selectBookingById } from "apps/NgBookingSystem/src/features/bookings/store/selectors/bookings.selectors";
+import { BookingFormData } from "apps/NgBookingSystem/src/dialogs/booking-dialog/booking-dialog.component";
+import {
+    useDeleteBookingMutation,
+    useGetBookingByIdQuery,
+    useUpdateBookingMutation
+} from "apps/NgBookingSystem/src/features/bookings/store/api/books-api";
+import {
+    useAddNewLocationMutation,
+    useGetLocationByIdQuery
+} from "apps/NgBookingSystem/src/features/locations/store/api";
 import { Booking } from "apps/NgBookingSystem/src/features/models/booking";
 
 @Component({
@@ -18,7 +26,13 @@ export class BookingPageComponent {
     showNotFoundMessage: boolean;
     private bookingId: string;
 
-    constructor(private route: ActivatedRoute, private location: Location, private store: Store<Booking>, private router: Router) {
+    constructor(
+        private route: ActivatedRoute,
+        private location: Location,
+        private store: Store<Booking>,
+        private router: Router,
+        private detectorRef: ChangeDetectorRef
+    ) {
         this.bookingId = '';
         this.showBookingInfo = false;
         this.showBookingForm = false;
@@ -35,20 +49,22 @@ export class BookingPageComponent {
     }
 
     getBooking() {
-        this.store.select(selectBookingById(this.bookingId)).subscribe(res => {
-            if (res) {
-                this.bookingInfo = res;
+        useGetBookingByIdQuery(this.bookingId).subscribe(res => {
+            const { data } = res;
+            if (data) {
+                this.bookingInfo = data;
                 this.showBookingInfo = true;
                 this.showNotFoundMessage = false;
             }
             else {
-                this.showNotFoundMessage = true
+
             }
-        })
+        });
     }
 
     async onClickDeleteItem() {
-        this.store.dispatch(DeleteBooking(this.bookingId));
+        const deleteBooking = useDeleteBookingMutation();
+        await deleteBooking.dispatch(this.bookingId).unwrap()
         await this.router.navigateByUrl('/bookings')
     }
 
@@ -66,21 +82,48 @@ export class BookingPageComponent {
         this.onShowForm();
     }
 
-    onEditBooking(editedBooking: Pick<Booking, "bookingLocationId" | "bookedHours" | "bookingTitle" | "bookingPrice" | "bookingDate">) {
-        if (this.bookingInfo) {
+    onEditBooking(editedBookingData: BookingFormData) {
+        const editedBooking = editedBookingData.booking;
+        const location = editedBookingData.location;
+
+        const { bookingTitle, bookedHours, bookingLocationId, bookingDate } = editedBooking;
+
+        const canSave = [bookingTitle, bookedHours, bookingDate, bookingLocationId, this.bookingInfo].every(Boolean);
+
+        if (canSave) {
             try {
-                this.store.dispatch(UpdateBooking(
+                // Update booking
+                const updateBooking = useUpdateBookingMutation();
+                updateBooking.dispatch(
                     {
-                        id: this.bookingInfo.id,
-                        postedDate: new Date().toISOString(),
-                        reactions: this.bookingInfo.reactions,
-                        ...editedBooking
-                    }));
+                        ...editedBooking,
+                        id: this.bookingInfo?.id,
+                        reactions: this.bookingInfo?.reactions
+                    }
+                ).unwrap()
+
+                // Save new location decision - ?
+                if (location.id) {
+                    useGetLocationByIdQuery(location.id).subscribe(res => {
+                        const { data } = res;
+                        if (!data) { // new location
+                            const addLocation = useAddNewLocationMutation();
+
+                            addLocation.dispatch(location).unwrap();
+                        }
+                    });
+                }
+
                 this.onHideForm();
             }
             catch (e) {
                 console.warn('Failed to save booking with err', e)
             }
+            this.detectorRef.detectChanges();
         }
+    }
+
+    goBack() {
+        this.location.back();
     }
 }

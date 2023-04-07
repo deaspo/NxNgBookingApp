@@ -8,17 +8,20 @@ import {
     ValidatorFn,
     Validators
 } from "@angular/forms";
-import { select, Store } from "@ngrx/store";
+import { MatDialog } from "@angular/material/dialog";
+import { Store } from "@ngrx/store";
 import { BookingState } from "apps/NgBookingSystem/src/features/bookings/store/reducer/booking.reducer";
+import { useGetLocationByIdQuery, useGetLocationsQuery } from "apps/NgBookingSystem/src/features/locations/store/api";
 import { Booking } from "apps/NgBookingSystem/src/features/models/booking";
+import { LocationProps } from "apps/NgBookingSystem/src/features/models/location";
 import { parseISO } from "date-fns";
+import { take } from "rxjs";
 import { Schema, z, ZodError } from 'zod';
 import { LocationState } from "../../features/locations/store/reducer/location.reducer";
-import { selectAllLocations } from "../../features/locations/store/selectors/all-locations.selectors";
 
-interface LocOptions {
-    value: string;
-    viewValue: string;
+export interface BookingFormData {
+    booking: Pick<Booking, "bookingLocationId" | "bookedHours" | "bookingTitle" | "bookingPrice" | "bookingDate">;
+    location: Partial<LocationProps>
 }
 
 interface ParseResult {
@@ -63,19 +66,23 @@ export function allowedPriceRange(): ValidatorFn {
                styleUrls: ['./booking-dialog.component.css']
            })
 export class BookingDialogComponent {
-    locationOptions: LocOptions[] = [];
     @Output() hideForm = new EventEmitter();
-    @Output() submitForm = new EventEmitter<Pick<Booking, "bookingLocationId" | "bookedHours" | "bookingTitle" | "bookingPrice" | "bookingDate">>()
+    @Output() submitForm = new EventEmitter<BookingFormData>()
     bookingForm: FormGroup = new FormGroup<any>({});
-    selectedLocation: string | undefined;
+    selectedLocationText: string;
+    selectedLocation: Partial<LocationProps> = {};
+    allLocationsData: LocationProps[] | undefined;
 
     private _selected: Booking | undefined;
 
     constructor(
         private storeLocation: Store<LocationState>,
         private storeBooking: Store<BookingState>,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        public dialog: MatDialog
     ) {
+
+        this.selectedLocationText = 'Location*'
     }
 
     get bookingInfo(): Booking | undefined {
@@ -102,13 +109,24 @@ export class BookingDialogComponent {
                         locationId: [this.bookingInfo?.bookingLocationId, Validators.required]
                     })
             });
-        this.selectedLocation = this.bookingInfo?.bookingLocationId;
 
-        this.storeLocation.pipe(select(selectAllLocations)).subscribe((res) => {
-            for (const { location, id } of res) {
-                this.locationOptions.push({ value: id, viewValue: location })
+        useGetLocationsQuery().pipe(take(1)).subscribe(res => {
+            const { data } = res;
+            if (data) {
+                this.allLocationsData = data;
             }
         });
+
+        if (this.bookingInfo?.bookingLocationId) {
+            useGetLocationByIdQuery(this.bookingInfo?.bookingLocationId).subscribe(res => {
+                const { data } = res;
+                if (data) {
+                    this.selectedLocationText = `${data.city}, ${data.country}`;
+                }
+            })
+        }
+
+        this.bookingForm.get('locationText')?.patchValue(this.selectedLocationText);
 
         const res = this.bookingForm.get('date')?.value;
         if (res === null || res === undefined) {
@@ -117,19 +135,23 @@ export class BookingDialogComponent {
         else {
             this.bookingForm.get('date')?.patchValue(parseISO(res).toISOString())
         }
+
     }
 
     onCancel() {
         this.hideForm.emit();
     }
 
-    async onSubmit() {
-        const submitData: Pick<Booking, "bookingLocationId" | "bookedHours" | "bookingTitle" | "bookingPrice" | "bookingDate"> = {
-            bookingTitle: this.bookingForm.value.title,
-            bookingDate: new Date(this.bookingForm.value.date).toISOString(),
-            bookedHours: this.bookingForm.value.hours,
-            bookingPrice: this.bookingForm.value.price,
-            bookingLocationId: this.bookingForm.value.location?.locationId
+    onSubmitBookingForm() {
+        const submitData: BookingFormData = {
+            booking: {
+                bookingTitle: this.bookingForm.value.title,
+                bookingDate: new Date(this.bookingForm.value.date).toISOString(),
+                bookedHours: this.bookingForm.value.hours,
+                bookingPrice: this.bookingForm.value.price,
+                bookingLocationId: this.bookingForm.value.location?.locationId
+            },
+            location: this.selectedLocation
         }
         this.submitForm.emit(submitData);
     }
@@ -155,4 +177,16 @@ export class BookingDialogComponent {
         }
         return errorMessages;
     }
+
+    updateLocationInfo(location: Partial<LocationProps>) {
+        const { isoCode, city, stateCode } = location;
+        const locId: string = `${isoCode}_${stateCode}_${city}`
+            .replaceAll(/\s/g, "_")
+            .toLocaleLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '');
+        this.selectedLocation = { ...location, id: locId };
+        this.bookingForm.get('location')?.get('locationId')?.patchValue(locId);
+    }
+
 }

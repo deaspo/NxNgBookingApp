@@ -1,0 +1,56 @@
+<div class="w-full block p-6 rounded-lg shadow-lg bg-white">
+    <div class="flex flex-shrink-0 items-center justify-between border-b border-gray-200 rounded-t-md">
+        <h5 class="text-xl font-medium leading-normal text-gray-800" mat-dialog-title>
+            Select location
+        </h5>
+    </div>
+    <div [formGroup]="locationForm" class="pt-1" mat-dialog-content>
+        <div class="w-full form-group">
+            <label>Country</label>
+            <ng-select
+                    (change)="onChange($event)"
+                    [(ngModel)]="data.isoCode" [clearable]="true" [ngModelOptions]="{standalone: true}"
+                    [searchable]="true"
+                    appearance="outline"
+            >
+                >
+                <ng-option></ng-option>
+                <ng-option *ngFor="let country of countries" [value]="country.code">
+                    {{country.label}}
+                </ng-option>
+            </ng-select>
+        </div>
+        <div class="w-full form-group">
+            <label>City</label>
+            <ng-select [(ngModel)]="data.city" [clearable]="true" [disabled]="!cities || cities.length === 0"
+                       [ngModelOptions]="{standalone: true}" [searchable]="true"
+                       appearance="outline">
+                >
+                <ng-option></ng-option>
+                <ng-option *ngFor="let city of cities" [value]="city.name">
+                    {{city.name}}
+                </ng-option>
+            </ng-select>
+        </div>
+        <br>
+        <div class="flex flex-shrink-0 flex-wrap items-center justify-end p-4 gap-4" mat-dialog-actions>
+            <button
+                    (click)="closeDialog()"
+                    class="!bg-purple-600 hover:bg-purple-700 hover:shadow-lg focus:bg-purple-700 focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
+                    mat-button
+            >
+                Close
+            </button>
+            <button
+                    [disabled]="data.isoCode === undefined"
+                    [mat-dialog-close]="data"
+                    class="primary-button hover:bg-blue-600 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg"
+                    mat-button
+            >
+                Submit
+            </button>
+        </div>
+    </div>
+    <p>Form Value: {{ data | json }}</p>
+</div>
+

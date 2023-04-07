@@ -1,1 +1,48 @@
-<p>locations-page works!</p>
+<div class="flex flex-col gap-4 border border-solid p-4 my-4">
+    <div class="">
+        <h2 class="mb-2 font-bold">Select Country</h2>
+        <ng-container *ngIf="bookedCountries$ | async as bookedCountries">
+            <ng-select
+                    (change)="onSelectionCountryChange($event); cityRef.handleClearClick(); cityRef.focus()"
+                    [disabled]="!bookedCountries$"
+                    [ngModel]="bookedCountries$"
+                    [searchable]="true"
+            >
+                <ng-option></ng-option>
+                <ng-option *ngFor="let country of bookedCountries" [value]="country.isoCode">
+                    {{country.label}}
+                </ng-option>
+            </ng-select>
+        </ng-container>
+    </div>
+    <div class="flex flex-row justify-between gap-8">
+        <div class="w-1/3">
+            <h2 class="mb-2 font-bold">Select City</h2>
+            <ng-select
+                #cityRef
+                (change)="onSelectCityChange($event)"
+                [disabled]="bookedCities.length === 0"
+                [ngModel]="bookedCities"
+            >
+                <ng-option></ng-option>
+                <ng-option *ngFor="let city of bookedCities" [value]="city">
+                    {{city.value}}
+                </ng-option>
+            </ng-select>
+        </div>
+        <div class="w-2/3">
+            <h2 class="mb-2 font-bold text-right">
+                {{locationInfoMessage}}
+            </h2>
+            <mat-action-list *ngIf="bookings" class=" border border-solid">
+                <span *ngIf="isLoadingLocation" matListItemLine>Loading location</span>
+                <ng-container *ngIf="isSuccessBookings">
+                    <mat-list-item *ngFor="let booking of bookings" [routerLink]="['/booking/'+booking.id]">
+                        <span matListItemLine>{{booking.bookingTitle}}</span>
+                    </mat-list-item>
+                </ng-container>
+                <li *ngIf="isErrorBooking">{{errorBooking | json}}</li>
+            </mat-action-list>
+        </div>
+    </div>
+</div>

@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
-import { Store } from "@ngrx/store";
-import { AddBooking } from "apps/NgBookingSystem/src/features/bookings/store/actions/booking.actions";
-import { BookingState } from "apps/NgBookingSystem/src/features/bookings/store/reducer/booking.reducer";
+import { BookingFormData } from "apps/NgBookingSystem/src/dialogs/booking-dialog/booking-dialog.component";
+import { useAddNewBookingMutation } from "apps/NgBookingSystem/src/features/bookings/store/api/books-api";
+import {
+    useAddNewLocationMutation,
+    useGetLocationByIdQuery
+} from "apps/NgBookingSystem/src/features/locations/store/api";
 import { Booking } from "apps/NgBookingSystem/src/features/models/booking";
 import { nanoid } from "nanoid";
 
@@ -16,7 +19,7 @@ export class BookingsPageComponent {
 
     bookingInfo: Booking | undefined;
 
-    constructor(private storeBooking: Store<BookingState>) {
+    constructor() {
         this.showBookingsList = true;
         this.showBookingForm = false;
     }
@@ -32,26 +35,52 @@ export class BookingsPageComponent {
         this.bookingInfo = undefined;
     }
 
-    onAddBooking(newBooking: Pick<Booking, "bookingLocationId" | "bookedHours" | "bookingTitle" | "bookingPrice" | "bookingDate">) {
-        const { bookingTitle, bookingPrice, bookingLocationId, bookingDate, bookedHours } = newBooking
+    onAddBooking(newBookingData: BookingFormData) {
+        const { bookingTitle, bookingPrice, bookingLocationId, bookingDate, bookedHours } = newBookingData.booking;
+        const location = newBookingData.location;
         const canSave = [bookingTitle, bookedHours, bookingDate, bookingLocationId].every(Boolean);
 
         if (canSave) {
             try {
-                this.storeBooking.dispatch(AddBooking(
+                // Save new location decision - ?
+                if (location.id) {
+                    useGetLocationByIdQuery(location.id).subscribe(res => {
+                        const { data } = res;
+                        if (!data) { // new location
+                            const addLocation = useAddNewLocationMutation();
+
+                            addLocation.dispatch(location).unwrap()
+                        }
+                    });
+                }
+
+                // Add new booking
+                const addBooking = useAddNewBookingMutation();
+                addBooking.dispatch(
                     {
                         bookedHours: bookedHours,
                         bookingDate: new Date(bookingDate).toISOString(),
                         bookingLocationId: bookingLocationId,
                         bookingPrice: bookingPrice,
                         bookingTitle: bookingTitle,
-                        id: nanoid(),
-                        postedDate: new Date().toISOString(),
-                        reactions: {
-                            thumbsDown: 0,
-                            thumbsUp: 0
-                        }
-                    }));
+                        id: nanoid()
+                    }
+                ).unwrap();
+
+                /*                this.storeBooking.dispatch(AddBooking(
+                 {
+                 bookedHours: bookedHours,
+                 bookingDate: new Date(bookingDate).toISOString(),
+                 bookingLocationId: bookingLocationId,
+                 bookingPrice: bookingPrice,
+                 bookingTitle: bookingTitle,
+                 id: nanoid(),
+                 postedDate: new Date().toISOString(),
+                 reactions: {
+                 thumbsDown: 0,
+                 thumbsUp: 0
+                 }
+                 }));*/
                 this.onHideForm();
             }
             catch (e) {

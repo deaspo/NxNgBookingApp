@@ -1,6 +1,7 @@
-import { createEntityAdapter, EntityAdapter, EntityState, Update } from "@ngrx/entity";
+import { EntityState, Update } from "@ngrx/entity";
 import { createReducer, on } from '@ngrx/store';
-import { initialState } from "apps/NgBookingSystem/src/features/data/initial-data";
+import { bookingAdapter, initialBookingStateAdapter } from "apps/NgBookingSystem/src/features/bookings/store/entity";
+import { initialBookingState } from "apps/NgBookingSystem/src/features/data/initial-booking-data";
 
 import { Booking } from "../../../models/booking";
 import {
@@ -17,27 +18,8 @@ export interface BookingState {
     bookings: Booking[];
 }
 
-export interface BookingAdapterState extends EntityState<Booking> {
-}
-
-export function selectBookingId(b: Booking) {
-    return b.id;
-}
-
-export function sortByPostedDate(a: Booking, b: Booking) {
-    return b.postedDate.localeCompare(a.postedDate);
-}
-
-export const bookingAdapter: EntityAdapter<Booking> = createEntityAdapter<Booking>(
-    {
-        selectId: selectBookingId,
-        sortComparer: sortByPostedDate
-    });
-export const initialStateAdapter: BookingAdapterState = bookingAdapter.getInitialState(
-    {})
-
 export const bookingAdapterReducer = createReducer(
-    initialStateAdapter,
+    initialBookingStateAdapter,
     on(AddBooking, (state: EntityState<Booking>, { booking }) => {
         return bookingAdapter.addOne(booking, state)
     }),
@@ -61,16 +43,8 @@ export const bookingAdapterReducer = createReducer(
     })
 );
 
-// Selectors
-export const {
-    selectEntities: selectAdapterBookingEntities,
-    selectTotal: selectAdapterBookingTotal,
-    selectAll: selectAdapterAllBookings,
-    selectIds: selectAdapterBookingIds
-} = bookingAdapter.getSelectors();
-
 export const bookingReducer = createReducer(
-    initialState,
+    initialBookingState,
     on(AddBooking, (state: BookingState, { booking }) => {
         return { ...state, bookings: [...state.bookings, booking] }
     }),

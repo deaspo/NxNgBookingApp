@@ -1,3 +1,49 @@
+<section *ngIf="bookingsQuery$ | async as bookingsQuery" class="">
+    <ng-container *ngIf="bookingsQuery.data as bookings; else loading">
+        <mat-action-list *ngIf="bookings.length; else emptyPosts"
+                         class="w-full overflow-auto h-full relative border-b-2">
+            <mat-list-item *ngFor="let booking of bookings; trackBy: trackByFn" [routerLink]="['/booking/'+ booking.id]"
+                           class="border-t-2">
+                <div class="flex w-full flex-col gap-2" data-testid="itemContent">
+                    <div class="flex items-center gap-2" data-testid="item-title">
+                        <div class="flex grow">
+                    <span class="m-0 font-sans text-xl md:text-2xl font-normal" matListItemTitle>
+                        {{booking.bookingTitle}}
+                    </span>
+                        </div>
+                        <div class="flex" data-testid="item-price">
+                            <app-booking-price [value]="booking.bookingPrice"></app-booking-price>
+                        </div>
+                    </div>
+                    <div class="!flex flex-col md:flex-row" data-testid="itemDateLocation" matListItemLine>
+                        <div data-testid="item-date">
+                            <app-booked-date [timeStamp]="booking.bookingDate"></app-booked-date>
+                        </div>
+                        <div class="md:ml-2" data-testid="item-location">
+                            <app-booking-location
+                                    [locationId]="booking.bookingLocationId"></app-booking-location>
+                        </div>
+                        <div class="md:ml-2" data-testid="item-location">
+                            <span> Hours: {{booking.bookedHours}}</span>
+                        </div>
+                    </div>
+                    <div class="text-sm text-gray-800" data-testid="item-posted-duration" matListItemLine>
+                        <app-time-ago [timeStamp]="booking.postedDate"></app-time-ago>
+                    </div>
+                    <app-reaction-button [booking]="booking"></app-reaction-button>
+                </div>
+            </mat-list-item>
+        </mat-action-list>
+        <ng-template #emptyPosts>
+            <p class="mt-4">No posts :(</p>
+        </ng-template>
+    </ng-container>
+
+    <ng-template #loading>
+        <small>Loading...</small>
+    </ng-template>
+</section>
+<!--
 <mat-action-list class="w-full overflow-auto h-full relative border-b-2">
     <mat-list-item *ngFor="let booking of bookings | async; let i=index"
                    [routerLink]="['/booking/'+ booking.id]"
@@ -31,4 +77,4 @@
             <app-reaction-button [booking]="booking"></app-reaction-button>
         </div>
     </mat-list-item>
-</mat-action-list>
+</mat-action-list>-->

@@ -1,7 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { Store } from "@ngrx/store";
-import { ReactionAdded } from "apps/NgBookingSystem/src/features/bookings/store/actions/booking.actions";
-import { BookingState } from "apps/NgBookingSystem/src/features/bookings/store/reducer/booking.reducer";
+import { Component, Input, SimpleChanges } from '@angular/core';
+import { useAddReactionMutation } from "apps/NgBookingSystem/src/features/bookings/store/api/books-api";
 import { Booking, ReactionType } from "apps/NgBookingSystem/src/features/models/booking";
 
 interface emojiType {
@@ -21,13 +19,12 @@ const reactionEmoji: emojiType = {
 export class ReactionButtonComponent {
     @Input() booking!: Booking;
     reactionButtons: any = {};
+    addReaction = useAddReactionMutation();
 
-    constructor(private store: Store<BookingState>) {}
+    constructor() {}
 
     ngOnInit() {
-        for (const [key, value] of Object.entries(reactionEmoji)) {
-            this.reactionButtons[value] = this.booking.reactions[key as keyof ReactionType]
-        }
+        this.updateReactionValues();
     }
 
     onClickReaction(e: Event, value: unknown) {
@@ -36,13 +33,25 @@ export class ReactionButtonComponent {
 
         const key = Object.keys(reactionEmoji).find(k => reactionEmoji[k] === value as string);
         if (key) {
-            /*if (key === 'thumbsDown') {
-             this.store.dispatch(ThumbsDown({ bookingId: this.booking.id }))
-             }*/
-
             const newValue = this.booking.reactions[key as keyof ReactionType] + 1;
-            const updatedReaction: ReactionType = { ...this.booking.reactions, [key]: newValue };
-            this.store.dispatch(ReactionAdded(this.booking.id, updatedReaction));
+            /*const updatedReaction: ReactionType = { ...this.booking.reactions, [key]: newValue };
+             this.store.dispatch(ReactionAdded(this.booking.id, updatedReaction));*/
+            this.addReaction.dispatch(
+                {
+                    bookingId: this.booking.id,
+                    reactions: { ...this.booking.reactions, [key]: newValue }
+                }).unwrap();
+        }
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        this.booking = changes['booking'].currentValue;
+        this.updateReactionValues();
+    }
+
+    updateReactionValues() {
+        for (const [key, value] of Object.entries(reactionEmoji)) {
+            this.reactionButtons[value] = this.booking.reactions[key as keyof ReactionType]
         }
     }
 

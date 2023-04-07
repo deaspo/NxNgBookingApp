@@ -2,7 +2,7 @@ import { sub } from 'date-fns';
 import { BookingState } from "../bookings/store/reducer/booking.reducer";
 import { Booking } from "../models/booking";
 
-export const initialAdapterState: Booking[] = [
+export const initialBookingsAdapterState: Booking[] = [
     {
         id: '0',
         bookedHours: 7,
@@ -109,6 +109,6 @@ export const initialAdapterState: Booking[] = [
     }
 ];
 
-export const initialState: BookingState = {
-    bookings: initialAdapterState
+export const initialBookingState: BookingState = {
+    bookings: initialBookingsAdapterState
 };

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { format, parseISO } from "date-fns";
 
 @Component({
@@ -11,6 +11,15 @@ export class BookedDateComponent {
     bookedDate = 'Unknown';
 
     ngOnInit() {
+
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        this.timeStamp = changes['timeStamp'].currentValue;
+        this.setDateInfo();
+    }
+
+    setDateInfo() {
         if (this.timeStamp) {
             this.bookedDate = format(parseISO(this.timeStamp), "dd-MM-yyyy");
         }

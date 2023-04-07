@@ -1,9 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { Store } from "@ngrx/store";
-import { LocationState } from "apps/NgBookingSystem/src/features/locations/store/reducer/location.reducer";
-import {
-    selectLocationById
-} from "apps/NgBookingSystem/src/features/locations/store/selectors/all-locations.selectors";
+import { Component, Input, SimpleChanges } from '@angular/core';
+import { useGetLocationByIdQuery } from "apps/NgBookingSystem/src/features/locations/store/api";
 
 @Component({
                selector: 'app-booking-location',
@@ -14,16 +10,29 @@ export class BookingLocationComponent {
     @Input() locationId!: string;
     location: string;
 
-    constructor(private store: Store<LocationState>) {
+    constructor() {
         this.location = 'Unknown';
     }
 
     ngOnInit() {
-        this.store.select(selectLocationById(this.locationId)).subscribe((results) => {
-            if (results) {
-                this.location = results.location
+        this.setLocationInfo();
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        const info = changes['locationId'].currentValue;
+        if (info) {
+            this.setLocationInfo();
+        }
+    }
+
+    setLocationInfo() {
+        useGetLocationByIdQuery(this.locationId).subscribe(res => {
+
+            const { data } = res;
+            if (data) {
+                this.location = `${data.city}, ${data.country}`
             }
-        });
+        })
     }
 
 }

@@ -8,10 +8,20 @@ import { RouterLink } from "@angular/router";
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from "@ngrx/store";
 import { ComponentsModule } from "apps/NgBookingSystem/src/components/components.module";
+import { extendedBookingApiSlice } from "apps/NgBookingSystem/src/features/bookings/store/api/books-api";
+
+import { StoreRtkQueryModule } from 'ngrx-rtk-query';
 import { BookingAddComponent } from './booking-add/booking-add.component';
 import { BookingsViewComponent } from './bookings-view/bookings-view.component';
 import { BookingEffectsEffects } from './store/effects/booking-effects.effects';
-import { bookingAdapterReducer, bookingFeatureKey } from "./store/reducer/booking.reducer";
+
+/*export type RootBookingsState = {
+ [extendedBookingApiSlice.reducerPath]: ReturnType<typeof extendedBookingApiSlice.reducer>
+ }
+
+ const reducers: ActionReducerMap<RootBookingsState> = {
+ [extendedBookingApiSlice.reducerPath]: extendedBookingApiSlice.reducer
+ }*/
 
 @NgModule({
               declarations: [
@@ -19,16 +29,18 @@ import { bookingAdapterReducer, bookingFeatureKey } from "./store/reducer/bookin
                   BookingAddComponent
               ],
               imports: [
+                  StoreModule.forFeature(
+                      extendedBookingApiSlice.reducerPath,
+                      extendedBookingApiSlice.reducer, { metaReducers: [extendedBookingApiSlice.metareducer] }),
                   CommonModule,
-//                  StoreModule.forFeature(bookingFeatureKey, bookingReducer),
-                  StoreModule.forFeature(bookingFeatureKey, bookingAdapterReducer),
                   ComponentsModule,
                   MatIconModule,
                   MatButtonModule,
                   MatTooltipModule,
                   MatListModule,
                   RouterLink,
-                  EffectsModule.forFeature([BookingEffectsEffects])
+                  EffectsModule.forFeature([BookingEffectsEffects]),
+                  StoreRtkQueryModule.forRoot({ setupListeners: true })
               ],
               exports: [
                   BookingsViewComponent,

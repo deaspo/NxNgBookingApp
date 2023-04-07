@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { formatDistanceToNow, parseISO } from "date-fns";
 
 @Component({
@@ -12,9 +12,20 @@ export class TimeAgoComponent {
 
     ngOnInit() {
         if (this.timeStamp) {
-            const date = parseISO(this.timeStamp);
-            const timePeriod = formatDistanceToNow(date);
-            this.timeAgo = `${timePeriod} ago`
+            this.setTimeDate(this.timeStamp);
         }
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        const stamp = changes['timeStamp'].currentValue;
+        if (stamp) {
+            this.setTimeDate(stamp)
+        }
+    }
+
+    setTimeDate(stamp: string) {
+        const date = parseISO(stamp);
+        const timePeriod = formatDistanceToNow(date);
+        this.timeAgo = `${timePeriod} ago`
     }
 }

@@ -1,4 +1,7 @@
-export interface Location {
+export interface LocationProps {
     id: string;
-    location: string;
+    city: string;
+    isoCode: string;
+    stateCode?: string;
+    country: string;
 }
