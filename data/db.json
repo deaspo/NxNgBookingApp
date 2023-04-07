@@ -111,7 +111,7 @@
       "postedDate": "2022-10-14T11:50:00.116Z",
       "reactions": {
         "thumbsUp": 1,
-        "thumbsDown": 3
+        "thumbsDown": 4
       }
     },
     {
@@ -218,7 +218,7 @@
       "bookingPrice": 600,
       "bookingLocationId": "fr_idf_paris",
       "reactions": {
-        "thumbsUp": 3,
+        "thumbsUp": 4,
         "thumbsDown": 4
       },
       "postedDate": "2023-02-19T18:12:02.784Z"

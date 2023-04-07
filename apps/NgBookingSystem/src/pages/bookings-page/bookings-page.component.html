@@ -1,6 +1,6 @@
 <app-bookings-view *ngIf="showBookingsList"
                    class="flex flex-col max-w-7xl min-w-sm"></app-bookings-view>
-<div class="flex justify-end flex-1 mt-4 ml-4">
+<div class="flex justify-end flex-1 mt-4 ml-4 sticky bottom-80">
     <app-booking-add
             (showingForm)="onShowForm()"
             *ngIf="showBookingsList"

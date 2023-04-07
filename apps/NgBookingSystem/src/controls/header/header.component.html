@@ -1,16 +1,17 @@
 <!-- Toolbar -->
 <nav
-        class="flex items-center text-white font-semibold p-6 bg-gray-800 flex-wrap w-full"
+        class="flex fixed z-20 flex-wrap items-center text-white font-semibold p-6 bg-gray-800 w-full"
         role="menubar"
 >
     <div class="block md:hidden">
-        <button aria-label="hamburger-icon" class="flex items-center">
+        <button aria-label="hamburger-icon" class="flex items-center"
+                type="button">
             <mat-icon>menu</mat-icon>
         </button>
     </div>
     <div class="spacer"></div>
     <div class="w-full block flex-grow md:flex md:items-center md:w-auto">
-        <div class="md:flex md:justify-center md:flex-grow items-baseline">
+        <div class="md:flex md:justify-end md:flex-grow items-baseline">
             <ng-container *ngFor="let navItem of navigation">
                 <a
                         [ngClass]="{'hover:bg-gray-700 py-2 px-0 md:px-3 text-sm font-medium': navItem.name != ''}"
@@ -24,5 +25,4 @@
             </ng-container>
         </div>
     </div>
-    <div class="spacer"></div>
 </nav>
